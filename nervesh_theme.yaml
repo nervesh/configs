@@ -1,0 +1,110 @@
+$schema: "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json"
+version: 2
+var:
+  YourVariable: "hulk"
+palette:
+  aqua: "#00FFFF"
+  white: "#FFFFFF"
+  black: "#000000"
+  magenta: "#FF00FF"
+
+blocks:
+  - type: "prompt"
+    alignment: "left"
+    segments:
+
+      - type: session
+        style: diamond
+        foreground: "p:black"
+        background: "p:aqua"
+        leading_diamond: 
+        trailing_diamond: 
+        template: "{{ if .SSHSession }}/{{ end }}  {{ .UserName }}"
+
+      - type: path
+        style: powerline
+        powerline_symbol: 
+        foreground: "p:white"
+        background: "p:magenta"
+        properties:
+          style: folder
+          home_icon: 󱂵
+        template: " {{ .Path }} "
+
+      - type: git
+        style: powerline
+        powerline_symbol: 
+        foreground: "#193549"
+        background: "#ffeb3b"
+        background_templates:
+          - "{{ if or (.Working.Changed) (.Staging.Changed) }}#FFEB3B{{end}}"
+          - "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#FFCC80{{end }}"
+          - "{{ if gt .Ahead 0 }}#B388FF{{end}}"
+          - "{{ if gt .Behind 0 }}#B388FB{{end}}"
+        templates:
+          - "[{{ .UpstreamIcon }}"
+          - "{{.HEAD}}"
+          - "{{ if .BranchStatus }} {{ .BranchStatus }} {{ end }}"
+          - "{{ if .Working.Changed }}   {{ .Working.String }} {{ end }}"
+          - "{{ if and (.Staging.Changed) (.Working.Changed)) | {{ end }}"
+          - "{{ if .Staging.Changed}}   {{.Staging.Changed}} {{end}}"
+          - "{{ if gt .StashCount 0 }}   {{ .StashCount }} {{ end}}]"
+        properties:
+          fetch_status: true
+          fetch_upstream_icon: true
+          untracked_modes:
+            /Users/user/Projects/oh-my-posh/: no
+          source: cli
+
+      - type: battery
+        style: powerline
+        powerline_symbol: 
+        foreground: "p:black"
+        background: "p:aqua"
+        background_templates:
+          - '{{if eq "Charging" .State.String}}p:aqua{{end}}'
+          - '{{if eq "Discharging" .State.String}}p:aqua{{end}}'
+          - '{{if eq "Full" .State.String}}p:aqua{{end}}"'
+        properties:
+          discharging_icon: "󱊤"
+          charging_icon: "󱊥"
+          charged_icon: "󱊦"
+        template: " {{ if not .Error }} { .Icon }} {{ .Percentage }} {{ end }}%"
+
+      - type: text
+        text: "user@host"
+        foreground: "#00ff00"  # Green text
+        background: "#000000"  # Black background
+        properties:
+          style: bold
+
+      - type: text
+        text: "path/to/directory"
+        foreground: "#0000ff"  # Blue text
+        background: "#000000"  # Black background
+
+  - type: "rprompt"
+    segments:
+      - type: time
+        style: powerline
+        powerline_symbol: "\ue0b0"
+        foreground: "p:black"
+        background: "p:aqua"
+        properties:
+          time_format: "02 Jan 06 15:04 MST"
+        template: "{{ .CurrentDate | date .Format}}"
+
+      - type: kubectl
+        style: powerline
+        powerline_symbol: "\ue0b0"
+        template: "{{.Context}}"
+        foreground: "p:aqua"
+        background: "p:magenta"
+
+      - type: kubectl
+        style: powerline
+        powerline_symbol: "\ue0b0"
+        template: "{{if .Namespace}}󱃾 {{.Namespace}} {{end}}"
+        foreground: "p:aqua"
+        background: "p:magenta"
+
